@@ -85,4 +85,21 @@
   bar.className = 'call-bar';
   bar.innerHTML = '<a href="tel:+18129790107">📞 Call (812) 979-0107 — by appointment only</a>';
   document.body.appendChild(bar);
+
+  // Footer quick links (Mailing List, Client Portal) — injected site-wide so
+  // these two pages are reachable from every page, not just the homepage.
+  var siteRoot = assetsBase.replace(/assets\/$/, '');
+  var footerInner = document.querySelector('footer.site-footer .inner');
+  if (footerInner) {
+    var links = document.createElement('div');
+    links.className = 'footer-links';
+    links.innerHTML = '<a href="' + siteRoot + 'home/mailing-list/index.html">Join Our Mailing List</a>' +
+      ' &nbsp;&middot;&nbsp; <a href="https://connect.chrisdoranlaw.com" target="_blank" rel="noopener">Existing Clients: Login to Portal</a>';
+    var disclaimer = footerInner.querySelector('.disclaimer');
+    if (disclaimer) {
+      footerInner.insertBefore(links, disclaimer);
+    } else {
+      footerInner.appendChild(links);
+    }
+  }
 })();
