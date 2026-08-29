@@ -1,6 +1,11 @@
 // Shared across every page: local-business structured data + sticky mobile call bar.
-// Loaded from a root-relative path (/assets/common.js) so it works at any URL depth.
+// Asset paths below are derived from this script's own URL, so the site works
+// whether it's served from the domain root or a sub-path (e.g. GitHub's
+// temporary username.github.io/repo-name/ URL before the custom domain is live).
 (function () {
+  var scriptSrc = document.currentScript ? document.currentScript.src : '';
+  var assetsBase = scriptSrc.replace(/common\.js(\?.*)?$/, '');
+
   var ld = document.createElement('script');
   ld.type = 'application/ld+json';
   ld.text = JSON.stringify({
@@ -41,9 +46,9 @@
   document.head.appendChild(ld);
 
   var iconLinks = [
-    ['icon', '/assets/favicon-32.png', 'image/png'],
-    ['icon', '/assets/favicon-192.png', 'image/png', '192x192'],
-    ['apple-touch-icon', '/assets/favicon-192.png']
+    ['icon', assetsBase + 'favicon-32.png', 'image/png'],
+    ['icon', assetsBase + 'favicon-192.png', 'image/png', '192x192'],
+    ['apple-touch-icon', assetsBase + 'favicon-192.png']
   ];
   iconLinks.forEach(function (spec) {
     var link = document.createElement('link');
@@ -57,7 +62,7 @@
   if (!document.querySelector('meta[property="og:image"]')) {
     var metas = [
       ['property', 'og:type', 'website'],
-      ['property', 'og:image', '/assets/og-image.png'],
+      ['property', 'og:image', assetsBase + 'og-image.png'],
       ['property', 'og:site_name', 'Chris Doran Law LLC'],
       ['name', 'twitter:card', 'summary_large_image']
     ];
