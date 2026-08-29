@@ -52,7 +52,7 @@ nav.main-nav a:hover, nav.main-nav a.active { border-bottom-color: var(--gold); 
 
 .hero {
   background: linear-gradient(180deg, rgba(13,22,38,0.78), rgba(13,22,38,0.88)),
-    url('https://lh3.googleusercontent.com/sitesv/AG8ngQWT4ljjCb7UFFJMkCzlmdhxKqPgZJK02tpX-tg2s5jFQis8X4pq62JrBRpq8nOwoZ0XIIxZB_7H8v0zNRYog-YPe1YV8-cN8ljeQwo-A9k_H7klRt0jvD8AXier2i7PTqdHPgtXk7Il1E9SOwGadjXb7Mx873hGG0kY5uvsJElFhdXyIIVgkz-SWCEK=w1600');
+    url('assets/photos/hero-courthouse.webp');
   background-size: cover;
   background-position: center 30%;
   color: #fff;
