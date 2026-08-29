@@ -25,7 +25,7 @@
 
 <main>
   <h1 class="page-title">Blog</h1>
-  <p style="font-family:Arial,sans-serif;color:var(--muted);font-size:0.9rem;">Same URL structure as today (<code>/blog/post-slug</code>). Posts are now grouped by topic and link to their matching practice-area page. Posts marked <span class="dupe-flag">SIMILAR TOPIC</span> cover close to the same ground &mdash; worth merging or clearly differentiating during migration.</p>
+  <p style="font-family:Arial,sans-serif;color:var(--muted);font-size:0.9rem;">Same URL structure as today (<code>/blog/post-slug</code>). Posts are now grouped by topic and link to their matching practice-area page. The set of near-duplicate posts flagged earlier (choosing an attorney, TOD deeds, and the two &ldquo;Back on the Bench&rdquo; posts) have been differentiated and cross-linked, each carrying an original-post and updated date.</p>
   <div id="posts"></div>
 </main>
 
@@ -79,8 +79,9 @@ const posts = [
   ["Can Your Adult Kid Move Home Without Ruining Your Estate Plan?", "can-your-adult-kid-move-home-without-ruining-your-estate-plan", 3],
   ["The \"No-Will\" Nightmare: What Happens to Your Property in North Vernon", "the-no-will-nightmare-what-happens-to-your-property-in-north-vernon", 3],
   ["Power of Attorney Vs. Guardianship: Which Is Better for Your Family", "power-of-attorney-vs-guardianship-which-is-better-for-your-family", 3],
-  ["Do You Really Need a Full Trust? Transfer on Death Deeds", "do-you-really-need-a-full-trust-transfer-on-death-deeds", 3, false, "tod"],
-  ["Do You Really Need a TOD (Transfer on Death) Deed?", "do-you-really-need-a-tod-transfer-on-death-deed", 3, false, "tod"],
+  ["Do You Really Need a Full Trust? Transfer on Death Deeds", "do-you-really-need-a-full-trust-transfer-on-death-deeds", 3, true],
+  ["Do You Really Need a TOD (Transfer on Death) Deed?", "do-you-really-need-a-tod-transfer-on-death-deed", 3, true],
+  ["Indiana's New 2026 TOD Deed Law Changes: 5 Things Jennings County Families Should Know", "looking-for-a-jennings-county-attorney-5-things-you-should-know-about-the", 3, true],
   ["Jennings County Probate FAQ: Everything North Vernon Families Need to Know", "jennings-county-probate-faq-everything-north-vernon-families-need-to-know", 3, true],
   ["Your Quick-Start Guide to Estate Planning in Vernon, Indiana: Do This First", "your-quick-start-guide-to-estate-planning-in-vernon-indiana-do-this-first", 3],
   ["Gun Trusts in Indiana: A Simple Guide for Jennings County Firearms Owners", "gun-trusts-in-indiana-a-simple-guide-for-jennings-county-firearms-owners", 3],
@@ -90,15 +91,14 @@ const posts = [
   ["The 10-Day Clock: Eviction Notice Must Be Perfect in Jennings County", "the-10-day-clock-eviction-notice-must-be-perfect-in-jennings-county", 4],
 
   ["Why Your Chatbot Isn't Your Lawyer: Protecting Your Secrets in the Age of AI", "why-your-chatbot-isnt-your-lawyer-protecting-your-secrets-in-the-age-of-a", 0],
-  ["Looking For a Jennings County Attorney? 5 Things You Should Know", "looking-for-a-jennings-county-attorney-5-things-you-should-know-about-the", 0, false, "lookingfor"],
-  ["Looking For a Lawyer in North Vernon, Indiana?", "looking-for-a-lawyer-in-north-vernon-indiana", 0, false, "lookingfor"],
+  ["Looking For a Lawyer in North Vernon, Indiana?", "looking-for-a-lawyer-in-north-vernon-indiana", 0, true],
   ["What exactly is a Judge Pro Tem?", "what-exactly-is-a-judge-pro-tem", 0],
-  ["Back on the Bench: An Important Update from Chris Doran Law LLC", "back-on-the-bench-an-important-update-from-chris-doran-law-llc", 0, false, "bench"],
-  ["Back on the Bench: What It Means to Serve as a Senior Judge in Indiana", "back-on-the-bench-what-it-means-to-serve-as-a-senior-judge-in-indiana", 0, false, "bench"],
+  ["Back on the Bench: An Important Update from Chris Doran Law LLC", "back-on-the-bench-an-important-update-from-chris-doran-law-llc", 0, true],
+  ["Back on the Bench: What It Means to Serve as a Senior Judge in Indiana", "back-on-the-bench-what-it-means-to-serve-as-a-senior-judge-in-indiana", 0, true],
   ["Your Guide to the Jennings County Courthouse: Parking, Security, etc.", "your-guide-to-the-jennings-county-courthouse-parking-security-etc", 0],
   ["Jennings County Court 101: A Beginner's Guide", "jennings-county-court-101-a-beginners-guide", 0],
   ["How to Check Your Jennings County Court Case in 5 Minutes", "how-to-check-your-jennings-county-court-case-in-5-minutes", 0],
-  ["How to Choose the Best Attorney in Vernon, Indiana", "how-to-choose-the-best-attorney-in-vernon-indiana", 0],
+  ["How to Choose the Best Attorney in Vernon, Indiana", "how-to-choose-the-best-attorney-in-vernon-indiana", 0, true],
   ["What You Need a Notary For (and Why It's Handy Having Your Attorney Certified)", "what-you-need-a-notary-for-and-why-its-handy-having-your-attorney-certifi", 0],
   ["Why Everyone Is Talking About AI Scams", "why-everyone-is-talking-about-ai-scams", 0],
   ["7 Common Legal Mistakes Rural Indiana Residents Make", "7-common-legal-mistakes-rural-indiana-residents-make", 0]
