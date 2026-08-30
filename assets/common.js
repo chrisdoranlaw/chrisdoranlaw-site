@@ -362,7 +362,7 @@
 
   var bar = document.createElement('div');
   bar.className = 'call-bar';
-  bar.innerHTML = '<a href="tel:+18129790107">📞 Call (812) 979-0107 — by appointment only</a>';
+  bar.innerHTML = '<a href="tel:+18129790107">📞 Call (812) 979-0107 — leave a message, we\'ll call back</a>';
   document.body.appendChild(bar);
 
   // GA4 conversion tracking: the two clearest lead-generation actions on the
