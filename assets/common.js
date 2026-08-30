@@ -369,6 +369,20 @@
   // these two pages are reachable from every page, not just the homepage.
   var footerInner = document.querySelector('footer.site-footer .inner');
   if (footerInner) {
+    // Indiana Rule of Professional Conduct 7.2(c) requires attorney
+    // advertising to include the responsible lawyer/firm's name and office
+    // address. The firm name is already in the header on every page, but
+    // several page templates omit the address from the footer — fill it in
+    // wherever it's missing rather than relying on every template to have it.
+    if (!footerInner.querySelector('.addr')) {
+      var addr = document.createElement('div');
+      addr.className = 'addr';
+      addr.innerHTML = 'MEETINGS BY APPOINTMENT ONLY<br>' +
+        'P.O. Box 398, 23 E Brown St, Vernon, IN 47282<br>' +
+        'E-mail: <a href="mailto:chris@chrisdoranlaw.com">chris@chrisdoranlaw.com</a> &nbsp;&middot;&nbsp; Telephone: 812-979-0107';
+      footerInner.insertBefore(addr, footerInner.firstChild);
+    }
+
     var links = document.createElement('div');
     links.className = 'footer-links';
     links.innerHTML = '<a href="' + siteRoot + 'home/mailing-list/index.html">Join Our Mailing List</a>' +
