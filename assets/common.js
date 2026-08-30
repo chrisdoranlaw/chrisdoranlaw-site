@@ -5,10 +5,9 @@
 (function () {
   var scriptSrc = document.currentScript ? document.currentScript.src : '';
   var assetsBase = scriptSrc.replace(/common\.js(\?.*)?$/, '');
+  var siteRoot = assetsBase.replace(/assets\/$/, '');
 
-  var ld = document.createElement('script');
-  ld.type = 'application/ld+json';
-  ld.text = JSON.stringify({
+  var attorneyLd = {
     "@context": "https://schema.org",
     "@type": "Attorney",
     "name": "Christopher L. Doran",
@@ -42,13 +41,82 @@
         { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Small Claims and Evictions" } }
       ]
     }
-  });
+  };
+  // Review/AggregateRating schema: only emitted on the page that actually
+  // displays the testimonials, so the markup always matches visible content.
+  var testimonialCards = document.querySelectorAll('.testimonial-grid .testimonial-card');
+  if (testimonialCards.length) {
+    var reviews = [];
+    testimonialCards.forEach(function (card) {
+      var body = card.querySelector('p');
+      var authorEl = card.querySelector('strong');
+      if (!body || !authorEl) return;
+      var author = authorEl.textContent.replace(/^[\s—-]+/, '').trim();
+      reviews.push({
+        "@type": "Review",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "author": { "@type": "Person", "name": author },
+        "reviewBody": body.textContent.replace(/^[“"]|[”"]$/g, '').trim()
+      });
+    });
+    attorneyLd.aggregateRating = {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "bestRating": "5",
+      "reviewCount": String(reviews.length)
+    };
+    attorneyLd.review = reviews;
+  }
+
+  // BlogPosting schema: only on pages with the blog post article markup.
+  var postArticle = document.querySelector('article.post');
+  if (postArticle) {
+    var headlineEl = postArticle.querySelector('h1.page-title');
+    var metaEl = postArticle.querySelector('.meta');
+    var updateEl = postArticle.querySelector('.update-note');
+    var firstImg = postArticle.querySelector('figure img');
+    var descEl = document.querySelector('meta[name="description"]');
+    var canonicalEl = document.querySelector('link[rel="canonical"]');
+
+    var toIso = function (mdY) {
+      var m = mdY && mdY.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (!m) return null;
+      return m[3] + '-' + m[1].padStart(2, '0') + '-' + m[2].padStart(2, '0');
+    };
+    var datePublished = toIso(metaEl && metaEl.textContent);
+    var dateModified = (updateEl && toIso(updateEl.textContent.replace(/^.*Updated/, ''))) || datePublished;
+
+    var blogLd = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": headlineEl ? headlineEl.textContent.trim() : document.title,
+      "description": descEl ? descEl.getAttribute('content') : undefined,
+      "url": canonicalEl ? canonicalEl.getAttribute('href') : location.href,
+      "image": firstImg ? firstImg.src : undefined,
+      "datePublished": datePublished || undefined,
+      "dateModified": dateModified || undefined,
+      "author": { "@type": "Person", "name": "Christopher L. Doran" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Chris Doran Law LLC",
+        "logo": { "@type": "ImageObject", "url": assetsBase + 'images/logo-badge.png' }
+      }
+    };
+    var blogScript = document.createElement('script');
+    blogScript.type = 'application/ld+json';
+    blogScript.text = JSON.stringify(blogLd);
+    document.head.appendChild(blogScript);
+  }
+
+  var ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.text = JSON.stringify(attorneyLd);
   document.head.appendChild(ld);
 
   var iconLinks = [
-    ['icon', assetsBase + 'favicon-32.png', 'image/png'],
-    ['icon', assetsBase + 'favicon-192.png', 'image/png', '192x192'],
-    ['apple-touch-icon', assetsBase + 'favicon-192.png']
+    ['icon', siteRoot + 'favicon-32.png', 'image/png'],
+    ['icon', assetsBase + 'images/favicon-512.png', 'image/png', '512x512'],
+    ['apple-touch-icon', siteRoot + 'apple-touch-icon.png']
   ];
   iconLinks.forEach(function (spec) {
     var link = document.createElement('link');
@@ -62,7 +130,7 @@
   if (!document.querySelector('meta[property="og:image"]')) {
     var metas = [
       ['property', 'og:type', 'website'],
-      ['property', 'og:image', assetsBase + 'og-image.png'],
+      ['property', 'og:image', assetsBase + 'images/og-image.jpg'],
       ['property', 'og:site_name', 'Chris Doran Law LLC'],
       ['name', 'twitter:card', 'summary_large_image']
     ];
@@ -88,7 +156,6 @@
 
   // Footer quick links (Mailing List, Client Portal) — injected site-wide so
   // these two pages are reachable from every page, not just the homepage.
-  var siteRoot = assetsBase.replace(/assets\/$/, '');
   var footerInner = document.querySelector('footer.site-footer .inner');
   if (footerInner) {
     var links = document.createElement('div');
