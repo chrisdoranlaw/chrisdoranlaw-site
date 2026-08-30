@@ -106,6 +106,48 @@
     blogScript.type = 'application/ld+json';
     blogScript.text = JSON.stringify(blogLd);
     document.head.appendChild(blogScript);
+
+    // Related posts: same category, pulled from the same JSON the blog
+    // index uses, so there's one source of truth for post/category data.
+    var slugMatch = location.pathname.match(/\/blog\/([^/]+)\//);
+    var currentSlug = slugMatch ? slugMatch[1] : null;
+    if (currentSlug) {
+      fetch(siteRoot + 'assets/posts.json').then(function (r) { return r.json(); }).then(function (data) {
+        var current = data.posts.find(function (p) { return p[1] === currentSlug; });
+        if (!current) return;
+        var sameCategory = data.posts.filter(function (p) { return p[2] === current[2] && p[1] !== currentSlug; });
+        if (!sameCategory.length) return;
+        for (var i = sameCategory.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = sameCategory[i]; sameCategory[i] = sameCategory[j]; sameCategory[j] = tmp;
+        }
+        var picks = sameCategory.slice(0, 3);
+
+        var section = document.createElement('div');
+        section.className = 'related-posts';
+        var heading = document.createElement('h2');
+        heading.textContent = 'Related Posts';
+        section.appendChild(heading);
+        var ul = document.createElement('ul');
+        ul.className = 'blog-list';
+        picks.forEach(function (p) {
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.textContent = p[0];
+          a.href = siteRoot + 'blog/' + p[1] + '/index.html';
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        section.appendChild(ul);
+
+        var ctaBand = postArticle.querySelector('.cta-band');
+        if (ctaBand) {
+          ctaBand.parentNode.insertBefore(section, ctaBand.nextSibling);
+        } else {
+          postArticle.appendChild(section);
+        }
+      }).catch(function () { /* related posts are a nice-to-have; fail silently */ });
+    }
   }
 
   var ld = document.createElement('script');

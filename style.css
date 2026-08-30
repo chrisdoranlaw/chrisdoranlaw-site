@@ -110,6 +110,9 @@ main { max-width: var(--max); margin: 0 auto; padding: 50px 24px 20px; }
 }
 .cta-band p { font-family: Arial, sans-serif; color: var(--muted); font-size: 0.9rem; }
 
+.related-posts { margin-top: 40px; }
+.related-posts h2 { margin-top: 0; }
+
 .update-note {
   background: #f4efe3;
   border: 1px solid var(--border);

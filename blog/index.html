@@ -25,6 +25,7 @@
 <meta property="og:url" content="https://www.chrisdoranlaw.com/blog">
 <meta property="og:image" content="https://www.chrisdoranlaw.com/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="Chris Doran Law LLC Blog" href="https://www.chrisdoranlaw.com/feed.xml">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -44,7 +45,7 @@
 
 <main>
   <h1 class="page-title">Blog</h1>
-  <p style="font-family:Arial,sans-serif;color:var(--muted);font-size:0.9rem;">Legal guidance for North Vernon and Jennings County, Indiana, organized by topic.</p>
+  <p style="font-family:Arial,sans-serif;color:var(--muted);font-size:0.9rem;">Legal guidance for North Vernon and Jennings County, Indiana, organized by topic. &nbsp;<a href="/feed.xml" style="font-weight:bold;">Subscribe via RSS &rarr;</a></p>
   <div id="posts"></div>
 </main>
 
@@ -57,92 +58,28 @@
 </footer>
 
 <script>
-const categories = [
-  { name: "Firm &amp; Community", link: null },
-  { name: "Criminal Defense", link: "../practice-areas/criminal-defense/index.html" },
-  { name: "Family Law", link: "../practice-areas/family-law/index.html" },
-  { name: "Estate Planning", link: "../practice-areas/estate-planning/index.html" },
-  { name: "Landlord-Tenant &amp; Small Claims", link: "../practice-areas/small-claims-and-evictions/index.html" }
-];
+fetch('/assets/posts.json').then(r => r.json()).then(({ categories, posts }) => {
+  const container = document.getElementById('posts');
+  categories.forEach((cat, ci) => {
+    const items = posts.filter(p => p[2] === ci);
+    if (!items.length) return;
+    const h = document.createElement('div');
+    h.className = 'blog-category';
+    h.innerHTML = cat.name + (cat.link ? ` &nbsp;<a href="${cat.link}" style="font-size:0.7rem;font-weight:bold;">VIEW PRACTICE AREA PAGE &rarr;</a>` : '');
+    container.appendChild(h);
 
-// [title, slug, category index, local(bool), dupeGroup(optional)]
-const posts = [
-  ["Accused of a Crime You Didn't Commit? 5 Things to Do (and 3 to Avoid)", "accused-of-a-crime-you-didnt-commit-5-things-to-do-and-3-to-avoid", 1, true],
-  ["The Ultimate Guide to Jennings County Bail Bonds: Everything You Need", "the-ultimate-guide-to-jennings-county-bail-bonds-everything-you-need", 1, true],
-  ["Is Public Camping Now a Crime? What North Vernon Residents Need to Know", "is-public-camping-now-a-crime-what-north-vernon-residents-need-to-know", 1, true],
-  ["Recovery Over Incarceration: How the Jennings County Adult Recovery Court Works", "recovery-over-incarceration-how-the-jennings-county-adult-recovery-court", 1, true],
-  ["How to Get Specialized Driving Privileges in North Vernon", "how-to-get-specialized-driving-privileges-in-north-vernon", 1, true],
-  ["Are Field Sobriety Tests Required? What North Vernon Drivers Should Know", "are-field-sobriety-tests-required-what-north-vernon-drivers-should-know", 1, true],
-  ["Facing Drug Charges in North Vernon? 5 Steps to Take Right After an Arrest", "facing-drug-charges-in-north-vernon-5-steps-to-take-right-after-an-arrest", 1, true],
-  ["Are You Facing Drug Charges in Indiana? New 2025 Laws Around Fentanyl", "are-you-facing-drug-charges-in-indiana-new-2025-laws-around-fentanyl", 1, true],
-  ["Can You Really Clear Your Criminal Record in Indiana?", "can-you-really-clear-your-criminal-record-in-indiana", 1, true],
-
-  ["Can Sports Winnings Really Pay Your Back Child Support?", "can-sports-winnings-really-pay-your-back-child-support", 2, true],
-  ["Can I Get a Divorce Without Going to Court in Indiana? What Jennings County Residents Should Know", "can-i-get-a-divorce-without-going-to-court-in-indiana-what-jennings-county", 2, true],
-  ["Can You Skip the Home Study in an Indiana Adoption?", "can-you-skip-the-home-study-in-an-indiana-adoption", 2, true],
-  ["5 Things to Know If You're Thinking About Adoption in Indiana", "5-things-to-know-if-youre-thinking-about-adoption-in-indiana", 2, true],
-  ["5 Steps to Master the New \"Free-Range\" Parenting Law and Protect Your Rights", "5-steps-to-master-the-new-free-range-parenting-law-and-protect-your-right", 2, true],
-  ["Why New \"Findings of Fact\" Laws Will Change the Way Attorneys in North Vernon Practice", "why-new-findings-of-fact-laws-will-change-the-way-attorneys-in-north-vern", 2, true],
-  ["The Permanency Project: Getting Our Kids Home Sooner", "the-permanency-project-getting-our-kids-home-sooner", 2, true],
-  ["The Secret to a Faster Divorce: How Staying Friendly Saves You Time and Money", "the-secret-to-a-faster-divorce-how-staying-friendly-saves-you-time-and", 2, true],
-  ["My Child Was Arrested in Jennings County: A Step-by-Step Guide for Stressed Parents", "my-child-was-arrested-in-jennings-county-a-step-by-step-guide-for-stressed", 2, true],
-  ["Do Grandparents Have a Legal Seat at the Table? Grandparent Visitation", "do-grandparents-have-a-legal-seat-at-the-table-grandparent-visitation", 2, true],
-  ["Mediator, Attorney, or Private Judge? Jennings County Custody Cases", "mediator-attorney-or-private-judge-jennings-county-custody-cases", 2, true],
-  ["Indiana's New Child Support Math Explained", "indianas-new-child-support-math-explained", 2, true],
-  ["Divorce vs. Legal Separation: Which Is Better For Your Jennings Co. Family", "divorce-vs-legal-separation-which-is-better-for-your-jennings-co-family", 2, true],
-  ["5 Steps How to Prepare for Your Indiana Custody Hearing and Build a Stronger Case", "5-steps-how-to-prepare-for-your-indiana-custody-hearing-and-build-a-stronge", 2, true],
-  ["How to File for Divorce in Jennings County", "how-to-file-for-divorce-in-jennings-county", 2, true],
-  ["Indiana CHINS Cases Explained: A Parent's Guide to What Happens Next", "indiana-chins-cases-explained-a-parents-guide-to-what-happens-next", 2, true],
-
-  ["Can Your Adult Kid Move Home Without Ruining Your Estate Plan?", "can-your-adult-kid-move-home-without-ruining-your-estate-plan", 3, true],
-  ["The \"No-Will\" Nightmare: What Happens to Your Property in North Vernon", "the-no-will-nightmare-what-happens-to-your-property-in-north-vernon", 3, true],
-  ["Power of Attorney Vs. Guardianship: Which Is Better for Your Family", "power-of-attorney-vs-guardianship-which-is-better-for-your-family", 3, true],
-  ["Do You Really Need a Full Trust? Transfer on Death Deeds", "do-you-really-need-a-full-trust-transfer-on-death-deeds", 3, true],
-  ["Do You Really Need a TOD (Transfer on Death) Deed?", "do-you-really-need-a-tod-transfer-on-death-deed", 3, true],
-  ["Indiana's New 2026 TOD Deed Law Changes: 5 Things Jennings County Families Should Know", "looking-for-a-jennings-county-attorney-5-things-you-should-know-about-the", 3, true],
-  ["Jennings County Probate FAQ: Everything North Vernon Families Need to Know", "jennings-county-probate-faq-everything-north-vernon-families-need-to-know", 3, true],
-  ["Your Quick-Start Guide to Estate Planning in Vernon, Indiana: Do This First", "your-quick-start-guide-to-estate-planning-in-vernon-indiana-do-this-first", 3, true],
-  ["Gun Trusts in Indiana: A Simple Guide for Jennings County Firearms Owners", "gun-trusts-in-indiana-a-simple-guide-for-jennings-county-firearms-owners", 3, true],
-  ["The High Cost of 'Free' Forms: Avoiding Accidental Fraud in Jennings County", "the-high-cost-of-free-forms-avoiding-accidental-fraud-in-jennings-county", 3, true],
-
-  ["Are Handshake Leases Dead? Why North Vernon Landlords Need a Written Agreement", "are-handshake-leases-dead-why-north-vernon-landlords-need-a-agreement", 4, true],
-  ["The 10-Day Clock: Eviction Notice Must Be Perfect in Jennings County", "the-10-day-clock-eviction-notice-must-be-perfect-in-jennings-county", 4, true],
-
-  ["Why Your Chatbot Isn't Your Lawyer: Protecting Your Secrets in the Age of AI", "why-your-chatbot-isnt-your-lawyer-protecting-your-secrets-in-the-age-of-a", 0, true],
-  ["Looking For a Lawyer in North Vernon, Indiana?", "looking-for-a-lawyer-in-north-vernon-indiana", 0, true],
-  ["What exactly is a Judge Pro Tem?", "what-exactly-is-a-judge-pro-tem", 0, true],
-  ["Back on the Bench: An Important Update from Chris Doran Law LLC", "back-on-the-bench-an-important-update-from-chris-doran-law-llc", 0, true],
-  ["Back on the Bench: What It Means to Serve as a Senior Judge in Indiana", "back-on-the-bench-what-it-means-to-serve-as-a-senior-judge-in-indiana", 0, true],
-  ["Your Guide to the Jennings County Courthouse: Parking, Security, etc.", "your-guide-to-the-jennings-county-courthouse-parking-security-etc", 0, true],
-  ["Jennings County Court 101: A Beginner's Guide", "jennings-county-court-101-a-beginners-guide", 0, true],
-  ["How to Check Your Jennings County Court Case in 5 Minutes", "how-to-check-your-jennings-county-court-case-in-5-minutes", 0, true],
-  ["How to Choose the Best Attorney in Vernon, Indiana", "how-to-choose-the-best-attorney-in-vernon-indiana", 0, true],
-  ["What You Need a Notary For (and Why It's Handy Having Your Attorney Certified)", "what-you-need-a-notary-for-and-why-its-handy-having-your-attorney-certifi", 0, true],
-  ["Why Everyone Is Talking About AI Scams", "why-everyone-is-talking-about-ai-scams", 0, true],
-  ["7 Common Legal Mistakes Rural Indiana Residents Make", "7-common-legal-mistakes-rural-indiana-residents-make", 0, true]
-];
-
-const container = document.getElementById('posts');
-categories.forEach((cat, ci) => {
-  const items = posts.filter(p => p[2] === ci);
-  if (!items.length) return;
-  const h = document.createElement('div');
-  h.className = 'blog-category';
-  h.innerHTML = cat.name + (cat.link ? ` &nbsp;<a href="${cat.link}" style="font-size:0.7rem;font-weight:bold;">VIEW PRACTICE AREA PAGE &rarr;</a>` : '');
-  container.appendChild(h);
-
-  const ul = document.createElement('ul');
-  ul.className = 'blog-list';
-  items.forEach(([title, slug, _cat, local]) => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.textContent = title;
-    a.href = local ? `${slug}/index.html` : `https://sites.google.com/chrisdoranlaw.com/chrisdoranlaw/blog/${slug}`;
-    if (!local) a.target = '_blank';
-    li.appendChild(a);
-    ul.appendChild(li);
+    const ul = document.createElement('ul');
+    ul.className = 'blog-list';
+    items.forEach(([title, slug]) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.textContent = title;
+      a.href = `/blog/${slug}/index.html`;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
   });
-  container.appendChild(ul);
 });
 </script>
 <script src="../assets/common.js" defer></script>
