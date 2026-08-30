@@ -25,7 +25,7 @@
 
 <main>
   <h1 class="page-title">Blog</h1>
-  <p style="font-family:Arial,sans-serif;color:var(--muted);font-size:0.9rem;">Same URL structure as today (<code>/blog/post-slug</code>). Posts are now grouped by topic and link to their matching practice-area page. The set of near-duplicate posts flagged earlier (choosing an attorney, TOD deeds, and the two &ldquo;Back on the Bench&rdquo; posts) have been differentiated and cross-linked, each carrying an original-post and updated date.</p>
+  <p style="font-family:Arial,sans-serif;color:var(--muted);font-size:0.9rem;">Legal guidance for North Vernon and Jennings County, Indiana, organized by topic.</p>
   <div id="posts"></div>
 </main>
 
@@ -48,7 +48,6 @@ const categories = [
 
 // [title, slug, category index, local(bool), dupeGroup(optional)]
 const posts = [
-  ["Why Hiring a Local North Vernon Lawyer Matters: The Advantage of a \"Small Town\" Practice", "why-hiring-a-local-north-vernon-lawyer-matters-the-small-town-advantage", 0, true],
   ["Accused of a Crime You Didn't Commit? 5 Things to Do (and 3 to Avoid)", "accused-of-a-crime-you-didnt-commit-5-things-to-do-and-3-to-avoid", 1, true],
   ["The Ultimate Guide to Jennings County Bail Bonds: Everything You Need", "the-ultimate-guide-to-jennings-county-bail-bonds-everything-you-need", 1],
   ["Is Public Camping Now a Crime? What North Vernon Residents Need to Know", "is-public-camping-now-a-crime-what-north-vernon-residents-need-to-know", 1],
@@ -115,25 +114,13 @@ categories.forEach((cat, ci) => {
 
   const ul = document.createElement('ul');
   ul.className = 'blog-list';
-  items.forEach(([title, slug, _cat, local, dupe]) => {
+  items.forEach(([title, slug, _cat, local]) => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.textContent = title;
     a.href = local ? `${slug}/index.html` : `https://sites.google.com/chrisdoranlaw.com/chrisdoranlaw/blog/${slug}`;
     if (!local) a.target = '_blank';
     li.appendChild(a);
-    if (local) {
-      const tag = document.createElement('span');
-      tag.style.cssText = 'font-family:Arial,sans-serif;color:#b08d3f;font-size:0.72rem;font-weight:bold;margin-left:10px;';
-      tag.textContent = 'REBUILT IN PREVIEW';
-      li.appendChild(tag);
-    }
-    if (dupe) {
-      const tag = document.createElement('span');
-      tag.className = 'dupe-flag';
-      tag.textContent = 'SIMILAR TOPIC';
-      li.appendChild(tag);
-    }
     ul.appendChild(li);
   });
   container.appendChild(ul);
