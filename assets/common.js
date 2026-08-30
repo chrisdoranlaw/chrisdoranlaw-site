@@ -113,41 +113,9 @@
   ld.text = JSON.stringify(attorneyLd);
   document.head.appendChild(ld);
 
-  var iconLinks = [
-    ['icon', siteRoot + 'favicon-32.png', 'image/png'],
-    ['icon', assetsBase + 'images/favicon-512.png', 'image/png', '512x512'],
-    ['apple-touch-icon', siteRoot + 'apple-touch-icon.png']
-  ];
-  iconLinks.forEach(function (spec) {
-    var link = document.createElement('link');
-    link.rel = spec[0];
-    link.href = spec[1];
-    if (spec[2]) link.type = spec[2];
-    if (spec[3]) link.sizes = spec[3];
-    document.head.appendChild(link);
-  });
-
-  if (!document.querySelector('meta[property="og:image"]')) {
-    var metas = [
-      ['property', 'og:type', 'website'],
-      ['property', 'og:image', assetsBase + 'images/og-image.jpg'],
-      ['property', 'og:site_name', 'Chris Doran Law LLC'],
-      ['name', 'twitter:card', 'summary_large_image']
-    ];
-    metas.forEach(function (spec) {
-      var m = document.createElement('meta');
-      m.setAttribute(spec[0], spec[1]);
-      m.setAttribute('content', spec[2]);
-      document.head.appendChild(m);
-    });
-    var ogTitle = document.querySelector('meta[property="og:title"]');
-    if (!ogTitle) {
-      var t = document.createElement('meta');
-      t.setAttribute('property', 'og:title');
-      t.setAttribute('content', document.title);
-      document.head.appendChild(t);
-    }
-  }
+  // Favicon and Open Graph tags are set statically in every page's <head>
+  // (so crawlers/link-preview bots that don't execute JS still see them) —
+  // nothing to inject here.
 
   var bar = document.createElement('div');
   bar.className = 'call-bar';
