@@ -365,6 +365,29 @@
   bar.innerHTML = '<a href="tel:+18129790107">📞 Call (812) 979-0107 — by appointment only</a>';
   document.body.appendChild(bar);
 
+  // GA4 conversion tracking: the two clearest lead-generation actions on the
+  // site are booking a call and calling directly. Delegated on document.body
+  // (rather than per-link) so it covers every instance of these links,
+  // including the ones injected dynamically above and in the footer below.
+  var trackClick = function (eventName, label) {
+    if (typeof gtag === 'function') gtag('event', eventName, { link_text: label });
+  };
+  document.body.addEventListener('click', function (e) {
+    var scheduleLink = e.target.closest('a[href*="scheduler.zoom.us"]');
+    if (scheduleLink) { trackClick('schedule_click', scheduleLink.textContent.trim()); return; }
+    var telLink = e.target.closest('a[href^="tel:"]');
+    if (telLink) { trackClick('phone_click', telLink.getAttribute('href')); return; }
+  });
+  // Mailing-list signup: the form is a cross-origin SuiteDash iframe, so it
+  // can't be observed directly. This listens for a postMessage from
+  // SuiteDash in case they emit one on submit; unverified — check GA4's
+  // DebugView against a real signup before relying on this event.
+  window.addEventListener('message', function (e) {
+    if (typeof e.origin === 'string' && e.origin.indexOf('suitedash.com') !== -1) {
+      trackClick('mailing_list_signup', 'suitedash postMessage');
+    }
+  });
+
   // Footer quick links (Mailing List, Client Portal) — injected site-wide so
   // these two pages are reachable from every page, not just the homepage.
   var footerInner = document.querySelector('footer.site-footer .inner');
