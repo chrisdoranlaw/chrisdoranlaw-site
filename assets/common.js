@@ -68,9 +68,12 @@
     attorneyLd.review = reviews;
   }
 
-  // BlogPosting schema: only on pages with the blog post article markup.
+  // article.post is shared CSS for blog posts AND practice-area/other-service
+  // pages, so BlogPosting schema and related-posts must be gated on actually
+  // being under /blog/ — not just the presence of that class.
   var postArticle = document.querySelector('article.post');
-  if (postArticle) {
+  var isBlogPost = postArticle && /^\/blog\//.test(location.pathname);
+  if (isBlogPost) {
     var headlineEl = postArticle.querySelector('h1.page-title');
     var metaEl = postArticle.querySelector('.meta');
     var updateEl = postArticle.querySelector('.update-note');
@@ -147,6 +150,82 @@
           postArticle.appendChild(section);
         }
       }).catch(function () { /* related posts are a nice-to-have; fail silently */ });
+    }
+  }
+
+  // "From the Blog": cross-links practice-area and other-service pages to
+  // relevant posts. Practice areas map straight to a posts.json category;
+  // other-service pages don't have a clean 1:1 category, so those get a
+  // short hand-picked list of slugs instead.
+  if (postArticle && !isBlogPost) {
+    var practiceAreaCategories = { 'criminal-defense': 1, 'family-law': 2, 'estate-planning': 3, 'small-claims-and-evictions': 4 };
+    var otherServicePicks = {
+      'domestic-relations-mediator': [
+        'the-secret-to-a-faster-divorce-how-staying-friendly-saves-you-time-and',
+        'mediator-attorney-or-private-judge-jennings-county-custody-cases',
+        'divorce-vs-legal-separation-which-is-better-for-your-jennings-co-family',
+        'how-to-file-for-divorce-in-jennings-county'
+      ],
+      'guardian-ad-litem-gal-a-voice-for-the-children': [
+        'indiana-chins-cases-explained-a-parents-guide-to-what-happens-next',
+        'the-permanency-project-getting-our-kids-home-sooner',
+        'do-grandparents-have-a-legal-seat-at-the-table-grandparent-visitation',
+        'my-child-was-arrested-in-jennings-county-a-step-by-step-guide-for-stressed'
+      ],
+      'private-judge-privacy-and-efficiency': [
+        'what-exactly-is-a-judge-pro-tem',
+        'back-on-the-bench-what-it-means-to-serve-as-a-senior-judge-in-indiana',
+        'mediator-attorney-or-private-judge-jennings-county-custody-cases',
+        'back-on-the-bench-an-important-update-from-chris-doran-law-llc'
+      ]
+    };
+
+    var paMatch = location.pathname.match(/\/practice-areas\/([^/]+)\//);
+    var osMatch = location.pathname.match(/\/other-services\/([^/]+)\//);
+    var category = paMatch ? practiceAreaCategories[paMatch[1]] : undefined;
+    var pickSlugs = osMatch ? otherServicePicks[osMatch[1]] : undefined;
+
+    if (category !== undefined || pickSlugs) {
+      fetch(siteRoot + 'assets/posts.json').then(function (r) { return r.json(); }).then(function (data) {
+        var picks;
+        if (pickSlugs) {
+          picks = pickSlugs
+            .map(function (slug) { return data.posts.find(function (p) { return p[1] === slug; }); })
+            .filter(Boolean);
+        } else {
+          var inCategory = data.posts.filter(function (p) { return p[2] === category; });
+          for (var i = inCategory.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = inCategory[i]; inCategory[i] = inCategory[j]; inCategory[j] = tmp;
+          }
+          picks = inCategory.slice(0, 6);
+        }
+        if (!picks.length) return;
+
+        var section = document.createElement('div');
+        section.className = 'related-posts';
+        var heading = document.createElement('h2');
+        heading.textContent = 'From the Blog';
+        section.appendChild(heading);
+        var ul = document.createElement('ul');
+        ul.className = 'blog-list';
+        picks.forEach(function (p) {
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.textContent = p[0];
+          a.href = siteRoot + 'blog/' + p[1] + '/index.html';
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        section.appendChild(ul);
+
+        var ctaBand = postArticle.querySelector('.cta-band');
+        if (ctaBand) {
+          ctaBand.parentNode.insertBefore(section, ctaBand.nextSibling);
+        } else {
+          postArticle.appendChild(section);
+        }
+      }).catch(function () { /* nice-to-have; fail silently */ });
     }
   }
 
