@@ -12,8 +12,9 @@
     "@type": "Attorney",
     "name": "Christopher L. Doran",
     "alternateName": "Chris Doran Law LLC",
-    "description": "Personalized criminal defense, family law, estate planning, and small claims/eviction representation in North Vernon and Jennings County, Indiana. Meetings by appointment only; walk-ins are not accepted.",
+    "description": "Personalized criminal defense, family law, estate planning, and small claims/eviction representation from an attorney in Vernon, serving Jennings County and North Vernon, Indiana. Meetings by appointment only; walk-ins are not accepted.",
     "url": "https://www.chrisdoranlaw.com/",
+    "image": "https://www.chrisdoranlaw.com/assets/photos/headshot.webp",
     "sameAs": [
       "https://www.google.com/search?kgmid=/g/11yzv04xvc",
       "https://www.avvo.com/attorneys/47282-in-christopher-doran-4712962.html",
