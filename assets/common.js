@@ -74,6 +74,50 @@
       "reviewCount": String(reviews.length)
     };
     attorneyLd.review = reviews;
+
+    // Recent from the Blog: homepage only (same testimonial-grid signal used
+    // above), pulled from feed.xml since it's already sorted newest-first —
+    // no separate "latest posts" data source to keep in sync.
+    fetch(siteRoot + 'feed.xml').then(function (r) { return r.text(); }).then(function (xml) {
+      var doc = new DOMParser().parseFromString(xml, 'application/xml');
+      var items = Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 3);
+      if (!items.length) return;
+
+      var section = document.createElement('div');
+      section.className = 'recent-posts';
+      var heading = document.createElement('h2');
+      heading.style.textAlign = 'center';
+      heading.style.border = 'none';
+      heading.textContent = 'Recent from the Blog';
+      section.appendChild(heading);
+      var ul = document.createElement('ul');
+      ul.className = 'blog-list';
+      items.forEach(function (item) {
+        var titleEl = item.querySelector('title');
+        var linkEl = item.querySelector('link');
+        if (!titleEl || !linkEl) return;
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        a.textContent = titleEl.textContent;
+        a.href = linkEl.textContent;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      section.appendChild(ul);
+      var more = document.createElement('p');
+      more.style.textAlign = 'center';
+      more.style.marginTop = '14px';
+      more.style.fontFamily = 'Arial, sans-serif';
+      more.style.fontSize = '0.85rem';
+      var moreLink = document.createElement('a');
+      moreLink.href = siteRoot + 'blog/index.html';
+      moreLink.textContent = 'Read more on the blog →';
+      more.appendChild(moreLink);
+      section.appendChild(more);
+
+      var testimonialsSection = document.querySelector('.testimonials');
+      if (testimonialsSection) testimonialsSection.parentNode.insertBefore(section, testimonialsSection.nextSibling);
+    }).catch(function () { /* nice-to-have; fail silently */ });
   }
 
   // article.post is shared CSS for blog posts AND practice-area/other-service

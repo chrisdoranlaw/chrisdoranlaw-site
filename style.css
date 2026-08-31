@@ -92,6 +92,7 @@ nav.main-nav a:hover, nav.main-nav a.active { border-bottom-color: var(--gold); 
 }
 .hero h1 { font-size: 2.4rem; margin: 0 0 6px; }
 .hero .role { font-family: Arial, sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-size: 0.85rem; margin-bottom: 22px; }
+.hero .tagline { font-size: 1.3rem; color: var(--gold); font-style: italic; margin: 0 0 26px; }
 .hero .notice { max-width: 640px; margin: 0 auto 26px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); padding: 10px 16px; border-radius: 4px; font-family: Arial, sans-serif; font-size: 0.88rem; }
 .btn {
   display: inline-block;
@@ -137,6 +138,9 @@ main { max-width: var(--max); margin: 0 auto; padding: 50px 24px 20px; }
 
 .related-posts { margin-top: 40px; }
 .related-posts h2 { margin-top: 0; }
+
+.recent-posts { margin-top: 46px; }
+.recent-posts h2 { margin-top: 0; }
 
 .update-note {
   background: #f4efe3;
