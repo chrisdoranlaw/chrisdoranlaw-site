@@ -223,6 +223,28 @@
       fetch(siteRoot + 'assets/posts.json').then(function (r) { return r.json(); }).then(function (data) {
         var current = data.posts.find(function (p) { return p[1] === currentSlug; });
         if (!current) return;
+
+        // Practice-area link: the reverse direction of "From the Blog" on
+        // practice-area pages. Category 0 (Firm & Community) has no matching
+        // practice area, so posts in it just don't get this link.
+        var practiceAreaByCategory = {
+          1: { slug: 'criminal-defense', name: 'Criminal Defense' },
+          2: { slug: 'family-law', name: 'Family Law' },
+          3: { slug: 'estate-planning', name: 'Estate Planning' },
+          4: { slug: 'small-claims-and-evictions', name: 'Landlord-Tenant & Small Claims' }
+        };
+        var pa = practiceAreaByCategory[current[2]];
+        if (pa) {
+          var paNote = document.createElement('p');
+          paNote.className = 'practice-area-note';
+          var paLink = document.createElement('a');
+          paLink.href = siteRoot + 'practice-areas/' + pa.slug + '/index.html';
+          paLink.textContent = 'This falls under our ' + pa.name + ' practice area →';
+          paNote.appendChild(paLink);
+          var anchorEl = postArticle.querySelector('.update-note') || postArticle.querySelector('.meta');
+          if (anchorEl) anchorEl.parentNode.insertBefore(paNote, anchorEl.nextSibling);
+        }
+
         var sameCategory = data.posts.filter(function (p) { return p[2] === current[2] && p[1] !== currentSlug; });
         if (!sameCategory.length) return;
         for (var i = sameCategory.length - 1; i > 0; i--) {

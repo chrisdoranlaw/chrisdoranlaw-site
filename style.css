@@ -167,6 +167,8 @@ main { max-width: var(--max); margin: 0 auto; padding: 50px 24px 20px; }
 .blog-list .more-note { font-family: Arial, sans-serif; color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px; }
 
 article.post .meta { font-family: Arial, sans-serif; color: var(--muted); font-size: 0.88rem; margin-bottom: 24px; }
+.practice-area-note { font-family: Arial, sans-serif; font-size: 0.85rem; margin: -12px 0 24px; }
+.practice-area-note a { font-weight: bold; }
 article.post h2 { color: var(--navy); margin-top: 34px; }
 article.post figure { margin: 26px 0; }
 article.post figcaption { font-family: Arial, sans-serif; font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
