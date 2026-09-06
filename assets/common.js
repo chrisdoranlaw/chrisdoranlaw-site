@@ -126,8 +126,66 @@
   // being under /blog/ — not just the presence of that class.
   var postArticle = document.querySelector('article.post');
   var isBlogPost = postArticle && /^\/blog\//.test(location.pathname);
+  var headlineEl = postArticle ? postArticle.querySelector('h1.page-title') : null;
+
+  // FAQPage schema: fires on any page built from the shared article.post
+  // template (blog posts AND practice-area pages) with genuine FAQ-shaped
+  // content. Detects either of two hand-written conventions —
+  // (a) <p><strong>Question?</strong> answer text</p>, used for FAQ blocks
+  //     embedded partway through a page, or
+  // (b) a whole page written as question headings (3+ <h2> ending in "?"),
+  //     with the answer being the paragraph(s) until the next heading.
+  // Only pattern (a) OR (b) fires per page, never both, to avoid duplicates.
+  if (postArticle) {
+    var faqItems = [];
+    postArticle.querySelectorAll('p').forEach(function (p) {
+      var strong = p.querySelector('strong');
+      if (strong && p.firstElementChild === strong && /\?\s*$/.test(strong.textContent.trim())) {
+        var question = strong.textContent.trim();
+        var answer = p.textContent.slice(p.textContent.indexOf(question) + question.length).trim();
+        if (answer) faqItems.push({ q: question, a: answer });
+      }
+    });
+    // Pattern (b) is gated on the page itself explicitly saying "FAQ" —
+    // question-phrased subheadings are a common rhetorical device in
+    // ordinary how-to content (e.g. "Ready to Take the Next Step?" as a
+    // closing CTA), and tagging those as genuine FAQ content risks Google
+    // penalizing non-genuine FAQ markup. Requiring an explicit FAQ signal
+    // avoids that.
+    if (!faqItems.length && /\bFAQs?\b|Frequently Asked Questions/i.test(headlineEl ? headlineEl.textContent : document.title)) {
+      var qHeadings = Array.prototype.filter.call(postArticle.querySelectorAll('h2'), function (h) {
+        return /\?\s*$/.test(h.textContent.trim());
+      });
+      if (qHeadings.length >= 3) {
+        qHeadings.forEach(function (h) {
+          var question = h.textContent.trim();
+          var answerParts = [];
+          var node = h.nextElementSibling;
+          while (node && node.tagName !== 'H2') {
+            if (node.tagName === 'P') answerParts.push(node.textContent.trim());
+            node = node.nextElementSibling;
+          }
+          var answer = answerParts.join(' ').trim();
+          if (answer) faqItems.push({ q: question, a: answer });
+        });
+      }
+    }
+    if (faqItems.length) {
+      var faqLd = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqItems.map(function (item) {
+          return { "@type": "Question", "name": item.q, "acceptedAnswer": { "@type": "Answer", "text": item.a } };
+        })
+      };
+      var faqScript = document.createElement('script');
+      faqScript.type = 'application/ld+json';
+      faqScript.text = JSON.stringify(faqLd);
+      document.head.appendChild(faqScript);
+    }
+  }
+
   if (isBlogPost) {
-    var headlineEl = postArticle.querySelector('h1.page-title');
     var metaEl = postArticle.querySelector('.meta');
     var updateEl = postArticle.querySelector('.update-note');
     var firstImg = postArticle.querySelector('figure img');
@@ -162,58 +220,6 @@
     blogScript.type = 'application/ld+json';
     blogScript.text = JSON.stringify(blogLd);
     document.head.appendChild(blogScript);
-
-    // FAQPage schema: detects either of two hand-written conventions —
-    // (a) <p><strong>Question?</strong> answer text</p>, used for FAQ blocks
-    //     embedded partway through a post, or
-    // (b) a whole post written as question headings (3+ <h2> ending in "?"),
-    //     with the answer being the paragraph(s) until the next heading.
-    // Only pattern (a) OR (b) fires per page, never both, to avoid duplicates.
-    var faqItems = [];
-    postArticle.querySelectorAll('p').forEach(function (p) {
-      var strong = p.querySelector('strong');
-      if (strong && p.firstElementChild === strong && /\?\s*$/.test(strong.textContent.trim())) {
-        var question = strong.textContent.trim();
-        var answer = p.textContent.slice(p.textContent.indexOf(question) + question.length).trim();
-        if (answer) faqItems.push({ q: question, a: answer });
-      }
-    });
-    // Pattern (b) is gated on the post itself explicitly saying "FAQ" in its
-    // title — question-phrased subheadings are a common rhetorical device in
-    // ordinary how-to posts (e.g. "Ready to Take the Next Step?" as a closing
-    // CTA), and tagging those as genuine FAQ content risks Google penalizing
-    // non-genuine FAQ markup. Requiring an explicit FAQ signal avoids that.
-    if (!faqItems.length && /\bFAQs?\b|Frequently Asked Questions/i.test(headlineEl ? headlineEl.textContent : document.title)) {
-      var qHeadings = Array.prototype.filter.call(postArticle.querySelectorAll('h2'), function (h) {
-        return /\?\s*$/.test(h.textContent.trim());
-      });
-      if (qHeadings.length >= 3) {
-        qHeadings.forEach(function (h) {
-          var question = h.textContent.trim();
-          var answerParts = [];
-          var node = h.nextElementSibling;
-          while (node && node.tagName !== 'H2') {
-            if (node.tagName === 'P') answerParts.push(node.textContent.trim());
-            node = node.nextElementSibling;
-          }
-          var answer = answerParts.join(' ').trim();
-          if (answer) faqItems.push({ q: question, a: answer });
-        });
-      }
-    }
-    if (faqItems.length) {
-      var faqLd = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": faqItems.map(function (item) {
-          return { "@type": "Question", "name": item.q, "acceptedAnswer": { "@type": "Answer", "text": item.a } };
-        })
-      };
-      var faqScript = document.createElement('script');
-      faqScript.type = 'application/ld+json';
-      faqScript.text = JSON.stringify(faqLd);
-      document.head.appendChild(faqScript);
-    }
 
     // Related posts: same category, pulled from the same JSON the blog
     // index uses, so there's one source of truth for post/category data.
