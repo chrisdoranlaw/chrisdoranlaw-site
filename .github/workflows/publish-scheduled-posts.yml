@@ -1,0 +1,30 @@
+name: Publish scheduled posts
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Publish any posts due today
+        run: python .github/scripts/publish_scheduled.py
+      - name: Commit and push if anything changed
+        run: |
+          if git diff --quiet; then
+            echo "No changes, nothing to commit."
+            exit 0
+          fi
+          git config user.name "chrisdoranlaw-bot"
+          git config user.email "chris@chrisdoranlaw.com"
+          git add assets/posts.json assets/scheduled-posts.json feed.xml sitemap.xml blog/
+          git commit -m "Auto-publish scheduled post(s)"
+          git push
