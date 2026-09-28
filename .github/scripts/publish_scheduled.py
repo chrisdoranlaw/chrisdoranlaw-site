@@ -5,7 +5,11 @@ Reads assets/scheduled-posts.json, and for every entry due today (UTC):
   2. adds it to assets/posts.json, grouped with its category
   3. adds an <item> to feed.xml and bumps <lastBuildDate>
   4. adds a <url> to sitemap.xml and bumps the /blog entry's <lastmod>
-  5. removes the entry from scheduled-posts.json
+  5. writes social-drafts/<slug>.md from the entry's optional gbpDraft /
+     fbDraft text, so the social copy is sitting there ready to paste the
+     same day the post goes live (posting itself stays manual — see the
+     module docstring in this repo's memory notes on why)
+  6. removes the entry from scheduled-posts.json
 
 Entries whose blog/_scheduled/<slug>/ folder is missing are left in the
 queue with a warning rather than silently dropped. Run from anywhere; ROOT
@@ -30,6 +34,7 @@ FEED_FILE = os.path.join(ROOT, "feed.xml")
 SITEMAP_FILE = os.path.join(ROOT, "sitemap.xml")
 SCHEDULED_DIR = os.path.join(ROOT, "blog", "_scheduled")
 BLOG_DIR = os.path.join(ROOT, "blog")
+SOCIAL_DRAFTS_DIR = os.path.join(ROOT, "social-drafts")
 
 BASE_URL = "https://www.chrisdoranlaw.com"
 BLOG_SITEMAP_MARKER = f'<url><loc>{BASE_URL}/blog</loc>'
@@ -56,6 +61,30 @@ def insert_into_posts_json(posts_data, entry, slug):
             posts_data["posts"].insert(i, new_row)
             return
     posts_data["posts"].append(new_row)
+
+
+def write_social_draft(entry, slug):
+    """Write social-drafts/<slug>.md from the entry's optional gbpDraft /
+    fbDraft fields. No-op if neither is present, so older-style manifest
+    entries without social copy don't produce an empty file."""
+    gbp = entry.get("gbpDraft", "").strip()
+    fb = entry.get("fbDraft", "").strip()
+    if not gbp and not fb:
+        return
+
+    post_url = f"{BASE_URL}/blog/{slug}"
+    lines = [f"# Social drafts: {entry['title']}", "", f"Post: {post_url}", ""]
+
+    if gbp:
+        lines += ["## Google Business Profile", "", gbp, "", f"CTA: Learn more -> {post_url}", ""]
+    if fb:
+        lines += ["## Facebook", "", fb, ""]
+
+    os.makedirs(SOCIAL_DRAFTS_DIR, exist_ok=True)
+    draft_path = os.path.join(SOCIAL_DRAFTS_DIR, f"{slug}.md")
+    with open(draft_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines))
+    print(f"Wrote social-drafts/{slug}.md")
 
 
 def build_feed_item(entry, slug, pub_date_str):
@@ -128,6 +157,8 @@ def publish_due_entries():
         marker_idx = sitemap_text.index(BLOG_SITEMAP_MARKER)
         line_end = sitemap_text.index("\n", marker_idx) + 1
         sitemap_text = sitemap_text[:line_end] + sitemap_line + sitemap_text[line_end:]
+
+        write_social_draft(entry, slug)
 
         published.append(slug)
         print(f"Published {slug}")

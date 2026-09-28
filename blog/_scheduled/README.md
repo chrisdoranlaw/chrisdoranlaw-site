@@ -22,13 +22,21 @@ GitHub Pages redeploys automatically from that push.
      "title": "Title exactly as it should appear in the blog index and RSS feed",
      "description": "One or two sentence RSS description (usually the meta description).",
      "category": 1,
-     "publishDate": "2026-10-03"
+     "publishDate": "2026-10-03",
+     "gbpDraft": "Optional: Google Business Profile post text, ready to paste.",
+     "fbDraft": "Optional: Facebook post text, in the warmer/personal voice — different copy than gbpDraft, not the same text reused."
    }
    ```
 
    `category` matches the same numbering as `assets/posts.json`: 0 = Firm &
    Community, 1 = Criminal Defense, 2 = Family Law, 3 = Estate Planning,
    4 = Landlord-Tenant & Small Claims.
+
+   `gbpDraft` and `fbDraft` are both optional. If either is present, the
+   script writes `social-drafts/<slug>.md` on publish day with that text
+   plus the live post URL, ready to copy into Google Business Profile
+   and/or Facebook by hand. Posting itself stays manual on purpose — see
+   the script's module docstring.
 
 3. Commit and push. That's it — the post sits here until its date arrives.
 

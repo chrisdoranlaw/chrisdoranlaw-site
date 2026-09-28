@@ -25,6 +25,6 @@ jobs:
           fi
           git config user.name "chrisdoranlaw-bot"
           git config user.email "chris@chrisdoranlaw.com"
-          git add assets/posts.json assets/scheduled-posts.json feed.xml sitemap.xml blog/
+          git add assets/posts.json assets/scheduled-posts.json feed.xml sitemap.xml blog/ social-drafts/
           git commit -m "Auto-publish scheduled post(s)"
           git push
