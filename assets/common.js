@@ -481,7 +481,8 @@
 
     var links = document.createElement('div');
     links.className = 'footer-links';
-    links.innerHTML = '<a href="' + siteRoot + 'home/mailing-list/index.html">Join Our Mailing List</a>' +
+    links.innerHTML = '<a href="' + siteRoot + 'jennings-county-attorney/index.html">Jennings County Attorney</a>' +
+      ' &nbsp;&middot;&nbsp; <a href="' + siteRoot + 'home/mailing-list/index.html">Join Our Mailing List</a>' +
       ' &nbsp;&middot;&nbsp; <a href="https://connect.chrisdoranlaw.com" target="_blank" rel="noopener">Existing Clients: Login to Portal</a>';
     var disclaimer = footerInner.querySelector('.disclaimer');
     if (disclaimer) {
