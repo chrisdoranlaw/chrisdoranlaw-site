@@ -78,7 +78,7 @@ def write_social_draft(entry, slug):
     if gbp:
         lines += ["## Google Business Profile", "", gbp, "", f"CTA: Learn more -> {post_url}", ""]
     if fb:
-        lines += ["## Facebook", "", fb, ""]
+        lines += ["## Facebook", "", fb, "", "Location tag: North Vernon, IN (use Facebook's location-tag field, not inline text)", ""]
 
     os.makedirs(SOCIAL_DRAFTS_DIR, exist_ok=True)
     draft_path = os.path.join(SOCIAL_DRAFTS_DIR, f"{slug}.md")

@@ -11,3 +11,5 @@ CTA: Learn more -> https://www.chrisdoranlaw.com/blog/do-you-need-a-lawyer-for-a
 ## Facebook
 
 Had a few people ask lately whether they really need a lawyer for an expungement, or if the free forms online are enough. Honest answer: sometimes they're enough! But Indiana's expungement law has some real traps, like the one-petition-per-lifetime rule for convictions, waiting periods that don't start when you'd expect, and categories that determine whether your record actually gets sealed. I wrote up the five details I see trip people up most. Take a look, and if you've got questions about your own situation, give the office a call.
+
+Location tag: North Vernon, IN (use Facebook's location-tag field, not inline text)

@@ -38,6 +38,13 @@ GitHub Pages redeploys automatically from that push.
    and/or Facebook by hand. Posting itself stays manual on purpose — see
    the script's module docstring.
 
+   No hashtags in `fbDraft`: Facebook's algorithm doesn't use them for
+   discovery the way Instagram or Twitter do, and they read as corporate
+   against the warm, personal voice these posts use. The script appends
+   a "Location tag: North Vernon, IN" reminder under the Facebook draft
+   instead, since Facebook's actual location-tag field is what helps
+   local reach. Use that field when posting, not inline text.
+
 3. Commit and push. That's it — the post sits here until its date arrives.
 
 ## What the script does *not* do
